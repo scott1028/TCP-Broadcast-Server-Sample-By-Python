@@ -27,10 +27,14 @@ print pid, parent_pid
 if pid == 0:
     # pid == 0
     print 'in child', os.getpid(), parent_pid
-    print fd.read()
+    print  'child=>\n', fd.read()
     fd.close()
 else:
     # pid != 0
     print 'in parent', os.getpid(), parent_pid
     raw_input('Wait child...\r\n')
     exit(0)
+    # print 'parent=>\n', fd.read()
+    # fd.close()
+
+# share read pointer, so if parent read, child will get nothing.
