@@ -1,4 +1,4 @@
-#!/usr/bin/python           # This is server.py file
+#!/usr/bin/python
 # ref: https://gist.github.com/josiahcarlson/3723597
 # ref: https://docs.python.org/2/library/socket.html#socket.fromfd
 
