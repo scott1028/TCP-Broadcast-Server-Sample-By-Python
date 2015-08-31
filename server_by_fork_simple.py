@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # ref: https://pymotw.com/2/socket/uds.html
 # ref: https://docs.python.org/2/library/os.html#os.fork
+# fork 前的變數記體狀態將會是一個一模一樣的副本給 Child, 剛好讓 Child Parent 共用與溝通
 
 
 import time
