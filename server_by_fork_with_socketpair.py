@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # ref: https://pymotw.com/2/socket/uds.html
+# ref: https://docs.python.org/2/library/os.html#os.fork
 
 
 import socket
@@ -21,10 +22,11 @@ print 'After .fork()'
 print pid, parent_pid
 
 
-if pid:
+if pid == 0:
     # pid == 0
-    print 'in parent, sending message'
+    print 'in child, sending message'
     child.close()
+    print 'send message: ping'
     parent.sendall('ping')
     response = parent.recv(1024)
     print 'response from child:', response
@@ -32,7 +34,7 @@ if pid:
 
 else:
     # pid != 0
-    print 'in child, waiting for message'
+    print 'in parent, waiting for message'
     parent.close()
     message = child.recv(1024)
     print 'message from parent:', message
