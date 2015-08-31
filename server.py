@@ -60,7 +60,6 @@ port = 12345
 server.bind(('127.0.0.1', port))
 server.listen(5)
 print 'Server FD No: ', server.fileno()
-import pdb; pdb.set_trace()
 
 while True:
     try:
