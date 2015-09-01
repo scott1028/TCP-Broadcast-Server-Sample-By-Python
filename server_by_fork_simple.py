@@ -43,6 +43,10 @@ while True:
     time.sleep(0.001)
     client, addr = server.accept()
     pid = os.fork()
-    print 'Fork and got connection from', addr
     if pid == 0:
+        # This process is child
+        print 'Fork and got connection from', addr
         clientHandler(client, addr, server)
+    else:
+        # This process is parent
+        pass
