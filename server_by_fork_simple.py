@@ -1,12 +1,37 @@
+# coding: utf-8
+
 #!/usr/bin/python
 # ref: https://pymotw.com/2/socket/uds.html
 # ref: https://docs.python.org/2/library/os.html#os.fork
 # fork 前的變數記體狀態將會是一個一模一樣的副本給 Child, 剛好讓 Child Parent 共用與溝通
+# 模擬類似 Apache 的 Multi-Process 的 Fork 架構
 
 
+import random
 import time
 import socket
 import os
+
+
+# 
+def clientHandler(client, addr, server):
+    while True:
+        time.sleep(0.001)
+        data = client.recv(1024)
+        print 'Server recv: ', [data]
+        client.send('Server(%s) send: ' % os.getpid() + data);
+        if data == 'exit\r\n':
+            client.close()
+            return
+
+
+# To launch Socket Server
+server = socket.socket()
+host = socket.gethostname()
+port = int(random.random()* 10000)  # 123456
+server.bind(('127.0.0.1', port))
+server.listen(5)
+print 'Server FD No: ', server.fileno(), ', port: ', port
 
 
 parent_pid = os.getpid()
@@ -14,28 +39,10 @@ print 'Parent PID: ', parent_pid
 # Share memory end
 
 
-#
-fd = open('./README.md', 'r')
-
-
-# Fork memory for per process start
-print 'Before .fork()'
-pid = os.fork()
-print 'After .fork()'
-print pid, parent_pid
-
-
-if pid == 0:
-    # pid == 0
-    print 'in child', os.getpid(), parent_pid
-    print  'child=>\n', fd.read()
-    fd.close()
-else:
-    # pid != 0
-    print 'in parent', os.getpid(), parent_pid
-    raw_input('Wait child...\r\n')
-    exit(0)
-    # print 'parent=>\n', fd.read()
-    # fd.close()
-
-# share read pointer, so if parent read, child will get nothing.
+while True:
+    time.sleep(0.001)
+    client, addr = server.accept()
+    pid = os.fork()
+    print 'Fork and got connection from', addr
+    if pid == 0:
+        clientHandler(client, addr, server)
